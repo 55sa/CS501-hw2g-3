@@ -75,7 +75,7 @@ fun parse( expression: String ): String{
         return "0"
     }
     Log.d("equal pressed", "$list")
-    val operators = listOf("+", "-", "*", "/", "%")
+    val operators = listOf("+", "-", "*", "/")
     val nums = listOf("1","2","3","4","5","6","7","8","9","0")
     var isOperator = false
 
@@ -198,13 +198,7 @@ fun Calculator(){
                     }){
                     Text("9")
                 }
-                Button(
-                    onClick = {
-                        input += " % "
 
-                    }){
-                    Text("%")
-                }
             }
             Row {
                 Button(

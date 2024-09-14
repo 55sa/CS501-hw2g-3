@@ -73,7 +73,7 @@ class test {
 }
 fun main(){
 
-   var expression="1 + 1"
+   var expression="3+1.5*2"
     println(calculation(expression.replace(" ","")))
 
 }
