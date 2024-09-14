@@ -22,7 +22,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.hw2g_3.ui.theme.Hw2g3Theme
+class Stack<T> {
+    private val elements: MutableList<T> = mutableListOf()
 
+    // Push element onto the stack
+    fun push(item: T) {
+        elements.add(item)
+    }
+
+    // Pop element from the stack
+    fun pop(): T? {
+        if (!isEmpty()) {
+            return elements.removeAt(elements.size - 1)
+        }
+        return null
+    }
+
+    // Peek the top element of the stack
+    fun peek(): T? = elements.lastOrNull()
+
+    // Check if the stack is empty
+    fun isEmpty(): Boolean = elements.isEmpty()
+
+    // Get the size of the stack
+    fun size(): Int = elements.size
+
+    // Display elements of the stack
+    fun display() {
+        if (elements.isEmpty()) {
+            println("Stack is empty.")
+        } else {
+            println("Stack elements: $elements")
+        }
+    }
+}
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +121,8 @@ fun parse( expression: String ): String{
 
     // TODO: Implement the algorithm to solve the expression
 
-    return "fine expression "
+
+    return calculation(expression.replace(" ","")).toString()
 }
 
 @Composable
@@ -224,6 +258,14 @@ fun Calculator(){
                     Text("3")
                 }
 
+                Button(
+                    onClick = {
+                        input =""
+
+                    }){
+                    Text("AC")
+                }
+
             }
             Row(modifier=Modifier.offset(x = 59.dp)) {
                 Button(
@@ -266,6 +308,75 @@ fun Modulo(x: Float, y: Float): Float{
 
 fun Deviation(x: Float, y: Float): Float{
     return (x / y).toFloat()
+}
+
+
+fun calculation(expression: String): Float{
+    var stack=Stack<Float>()
+    var pre='+'
+    var result=0f
+    var decimal=1
+    var pos=0
+    var cur=0f
+    stack.push(0f)
+
+    while (pos<expression.length){
+        val start=pos
+        while (pos<expression.length && (expression.get(pos).isDigit()|| expression.get(pos)=='.')){
+            pos++
+        }
+        cur=expression.substring(start,pos).toFloat()
+
+        if(pos==expression.length){
+            if(pre=='+'){
+                stack.push(cur)
+
+            }
+            else if(pre=='-'){
+                stack.push(-cur)
+
+            }
+            else if(pre=='*'){
+                stack.push(stack.pop()!! * cur)
+
+            }
+            else if(pre=='/'){
+                stack.push(stack.pop()!! / cur)
+
+            }
+            break
+
+        }
+
+
+
+        if((!expression.get(pos).isDigit() && expression.get(pos)!='.')){
+            if(pre=='+'){
+                stack.push(cur)
+                pre=expression.get(pos)
+            }
+            else if(pre=='-'){
+                stack.push(-cur)
+                pre=expression.get(pos)
+            }
+            else if(pre=='*'){
+
+                stack.push(stack.pop()!! * cur)
+                pre=expression.get(pos)
+            }
+            else if(pre=='/'){
+                stack.push(stack.pop()!! / cur)
+                pre=expression.get(pos)
+            }
+            cur=0f
+            pos++
+        }
+
+    }
+    while(!stack.isEmpty()){
+        result = result + stack.pop()!!
+    }
+    return result
 }
 
 @Preview(showBackground = true)
