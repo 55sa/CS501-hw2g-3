@@ -1,27 +1,23 @@
 package com.example.hw2g_3
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,24 +38,64 @@ class MainActivity : ComponentActivity() {
 fun parse( expression: String ): String{
     // parse the expression and calculate the answer
     val list = expression.split(" ")
+    if (list.size == 0){
+        return "0"
+    }
+    Log.d("equal pressed", "$list")
     val operators = listOf("+", "-", "*", "/", "%")
+    val nums = listOf("1","2","3","4","5","6","7","8","9","0")
+    var isOperator = false
+
     for (index in list.indices) {
-        var element = list[index]
-        if (element in operators){
+        val element = list[index]
+//        Log.d("equal pressed", "element")
+        if (element == ""){
+            return "Wrong Operator Syntax"
+        }
+        else if (element in operators){
+            if (index == 0){
+                return "Invalid Expression: Operator cannot be at the beginning"
+            }
+            if (element == "/") {
+                try {
+                    val temp = list[index + 1].toFloat()
+                    if (temp == 0f) return "Cannot Divide by 0"
+                } catch (ex: NumberFormatException) {
+                    // cannot convert to float
+                }
+            }
+            else if (isOperator){
+                return "Invalid Expression"
+            }
             if (index == list.size){
                 return "Invalid Expression"
             }
-            if (element == "/" && list[index + 1].toFloat() == 0f) {
-                return "Cannot Divide by 0"
+            isOperator = true
+        }
+        else if (element !in nums){
+            try {
+                element.toFloat()
+//                val a = element.toFloat() * 2
+//                Log.d("equal pressed", a.toString())
+            } catch (ex: NumberFormatException){
+                return "Undetected character"
             }
         }
+        else{
+            isOperator = false
+        }
     }
-    return expression
+
+    // TODO: Implement the algorithm to solve the expression
+
+    return "fine expression "
 }
 
 @Composable
 fun Calculator(){
-    Column(modifier=Modifier.fillMaxSize().padding(60.dp)){
+    Column(modifier= Modifier
+        .fillMaxSize()
+        .padding(60.dp)){
         var input by remember { mutableStateOf("") }
         var expression by remember { mutableStateOf("") }
 //        var operation by remember { mutableStateOf("") }
@@ -74,7 +110,8 @@ fun Calculator(){
         Column(modifier = Modifier
 //                .padding(padding)
 //                .clickable(onClick = onClick)
-                .fillMaxSize().padding(20.dp)){
+            .fillMaxSize()
+            .padding(20.dp)){
             Row {
                 Button(
                     onClick = {
@@ -159,7 +196,7 @@ fun Calculator(){
                 }
                 Button(
                     onClick = {
-                        input = parse(expression)
+                        input = parse(input)
                     }){
                     Text("=")
                 }
