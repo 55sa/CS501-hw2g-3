@@ -1,0 +1,80 @@
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\n    alias(libs.plugins.android.application)\n    alias(libs.plugins.kotlin.android)\n}\n\nandroid {\n    namespace = \"com.example.hw2g_3\"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = \"com.example.hw2g_3\"\n        minSdk = 21\n        targetSdk = 34\n        versionCode = 1\n        versionName = \"1.0\"\n\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n        vectorDrawables {\n            useSupportLibrary = true\n        }\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n            proguardFiles(\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n                \"proguard-rules.pro\"\n            )\n        }\n    }\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_1_8\n        targetCompatibility = JavaVersion.VERSION_1_8\n    }\n    kotlinOptions {\n        jvmTarget = \"1.8\"\n    }\n    buildFeatures {\n        compose = true\n    }\n    composeOptions {\n        kotlinCompilerExtensionVersion = \"1.5.1\"\n    }\n    packaging {\n        resources {\n            excludes += \"/META-INF/{AL2.0,LGPL2.1}\"\n        }\n    }\n}\n\ndependencies {\n\n    implementation(libs.androidx.core.ktx)\n    implementation(libs.androidx.lifecycle.runtime.ktx)\n    implementation(libs.androidx.activity.compose)\n    implementation(platform(libs.androidx.compose.bom))\n    implementation(libs.androidx.ui)\n    implementation(libs.androidx.ui.graphics)\n    implementation(libs.androidx.ui.tooling.preview)\n    implementation(libs.androidx.material3)\n    testImplementation(libs.junit)\n    androidTestImplementation(libs.androidx.junit)\n    androidTestImplementation(libs.androidx.espresso.core)\n    androidTestImplementation(platform(libs.androidx.compose.bom))\n    androidTestImplementation(libs.androidx.ui.test.junit4)\n    debugImplementation(libs.androidx.ui.tooling)\n    debugImplementation(libs.androidx.ui.test.manifest)\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 0bd1c17a63d6638dddcfff1796d4ac5665a476d8)
++++ b/app/build.gradle.kts	(date 1726185835997)
+@@ -66,4 +66,6 @@
+     androidTestImplementation(libs.androidx.ui.test.junit4)
+     debugImplementation(libs.androidx.ui.tooling)
+     debugImplementation(libs.androidx.ui.test.manifest)
++
++    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.5")
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/hw2g_3/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.hw2g_3\n\nimport android.os.Bundle\nimport androidx.activity.ComponentActivity\nimport androidx.activity.compose.setContent\nimport androidx.activity.enableEdgeToEdge\nimport androidx.compose.foundation.layout.fillMaxSize\nimport androidx.compose.foundation.layout.padding\nimport androidx.compose.material3.Scaffold\nimport androidx.compose.material3.Text\nimport androidx.compose.runtime.Composable\nimport androidx.compose.ui.Modifier\nimport androidx.compose.ui.tooling.preview.Preview\nimport com.example.hw2g_3.ui.theme.Hw2g3Theme\n\nclass MainActivity : ComponentActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        enableEdgeToEdge()\n        setContent {\n            Hw2g3Theme {\n                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->\n                    Greeting(\n                        name = \"Android\",\n                        modifier = Modifier.padding(innerPadding)\n                    )\n                }\n            }\n        }\n    }\n}\n\n@Composable\nfun Greeting(name: String, modifier: Modifier = Modifier) {\n    Text(\n        text = \"Hello $name!\",\n        modifier = modifier\n    )\n}\n\n@Preview(showBackground = true)\n@Composable\nfun GreetingPreview() {\n    Hw2g3Theme {\n        Greeting(\"Android\")\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/hw2g_3/MainActivity.kt b/app/src/main/java/com/example/hw2g_3/MainActivity.kt
+--- a/app/src/main/java/com/example/hw2g_3/MainActivity.kt	(revision 0bd1c17a63d6638dddcfff1796d4ac5665a476d8)
++++ b/app/src/main/java/com/example/hw2g_3/MainActivity.kt	(date 1726187363550)
+@@ -30,6 +30,9 @@
+     }
+ }
+ 
++
++
++
+ @Composable
+ fun Greeting(name: String, modifier: Modifier = Modifier) {
+     Text(
+Index: app/src/main/java/com/example/hw2g_3/CalButton.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/hw2g_3/CalButton.kt b/app/src/main/java/com/example/hw2g_3/CalButton.kt
+new file mode 100644
+--- /dev/null	(date 1726208643972)
++++ b/app/src/main/java/com/example/hw2g_3/CalButton.kt	(date 1726208643972)
+@@ -0,0 +1,31 @@
++package com.example.hw2g_3
++
++import androidx.compose.foundation.clickable
++import androidx.compose.foundation.layout.Box
++import androidx.compose.foundation.shape.CircleShape
++import androidx.compose.material3.Text
++import androidx.compose.runtime.Composable
++import androidx.compose.ui.Alignment
++import androidx.compose.ui.Modifier
++import androidx.compose.ui.draw.clip
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.unit.sp
++
++@Composable
++fun CalButton(
++    symbol: String,
++    modifier: Modifier,
++    onClick: ()->Unit
++) {
++    Box(
++        contentAlignment = Alignment.Center,
++        modifier = Modifier
++            .clip(CircleShape)
++            .clickable { onClick }
++            .then(modifier)
++    ){
++        Text(text=symbol,
++            fontSize = 36.sp,
++            color = Color.White)
++    }
++}
+\ No newline at end of file
