@@ -85,8 +85,8 @@ fun parse( expression: String ): String{
         if (element == ""){
             return "Wrong Operator Syntax"
         }
-        else if (element in operators){
-            if (index == 0){
+        else if (element in operators) {
+            if (index == 0) {
                 return "Invalid Expression: Operator cannot be at the beginning"
             }
             if (element == "/") {
@@ -96,16 +96,15 @@ fun parse( expression: String ): String{
                 } catch (ex: NumberFormatException) {
                     // cannot convert to float
                 }
-            }
-            else if (isOperator){
+            } else if (isOperator) {
                 return "Invalid Expression"
             }
-            if (index == list.size){
+            if (index == list.size) {
                 return "Invalid Expression"
             }
             isOperator = true
         }
-        else if (element !in nums){
+        else{
             try {
                 element.toFloat()
 //                val a = element.toFloat() * 2
@@ -113,8 +112,6 @@ fun parse( expression: String ): String{
             } catch (ex: NumberFormatException){
                 return "Undetected character"
             }
-        }
-        else{
             isOperator = false
         }
     }
@@ -199,6 +196,7 @@ fun Calculator(){
                     Text("9")
                 }
 
+
             }
             Row {
                 Button(
@@ -261,7 +259,14 @@ fun Calculator(){
                 }
 
             }
-            Row(modifier=Modifier.offset(x = 59.dp)) {
+            Row {
+                Button(
+                    onClick = {
+                        input += "-"
+
+                    }){
+                    Text("( - )")
+                }
                 Button(
                     onClick = {
                         input += "0"
@@ -278,6 +283,7 @@ fun Calculator(){
                 }
 
             }
+            Text (text = "the ( - ) symbol is the negation operator, used to indicate a negative number.")
         }
     }
 }
@@ -319,7 +325,9 @@ fun calculation(expression: String): Float{
         while (pos<expression.length && (expression.get(pos).isDigit()|| expression.get(pos)=='.')){
             pos++
         }
-        cur=expression.substring(start,pos).toFloat()
+        if(start<pos){
+
+        cur=expression.substring(start,pos).toFloat()}
 
         if(pos==expression.length){
             if(pre=='+'){
@@ -327,6 +335,7 @@ fun calculation(expression: String): Float{
 
             }
             else if(pre=='-'){
+
                 stack.push(-cur)
 
             }
