@@ -21,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import com.example.hw2g_3.ui.theme.Hw2g3Theme
 class Stack<T> {
     private val elements: MutableList<T> = mutableListOf()
@@ -119,7 +120,7 @@ fun parse( expression: String ): String{
     // TODO: Implement the algorithm to solve the expression
 
 
-    return calculation(expression.replace(" ","")).toString()
+    return calculation(list).toString()
 }
 
 @Composable
@@ -311,39 +312,39 @@ fun Deviation(x: Float, y: Float): Float{
 }
 
 
-fun calculation(expression: String): Float{
+fun calculation(expression: List<String>): Float{
     var stack=Stack<Float>()
-    var pre='+'
+    var pre="+"
     var result=0f
     var decimal=1
     var pos=0
     var cur=0f
     stack.push(0f)
 
-    while (pos<expression.length){
-        val start=pos
-        while (pos<expression.length && (expression.get(pos).isDigit()|| expression.get(pos)=='.')){
-            pos++
-        }
-        if(start<pos){
+    while (pos<expression.size){
 
-        cur=expression.substring(start,pos).toFloat()}
 
-        if(pos==expression.length){
-            if(pre=='+'){
+
+
+        cur=expression.get(pos).toFloat()
+        pos++
+
+
+        if(pos==expression.size){
+            if(pre.equals("+")){
                 stack.push(cur)
 
             }
-            else if(pre=='-'){
+            else if(pre.equals("-")){
 
                 stack.push(-cur)
 
             }
-            else if(pre=='*'){
+            else if(pre.equals("*")){
                 stack.push(stack.pop()!! * cur)
 
             }
-            else if(pre=='/'){
+            else if(pre.equals("/")){
                 stack.push(stack.pop()!! / cur)
 
             }
@@ -353,29 +354,30 @@ fun calculation(expression: String): Float{
 
 
 
-        if((!expression.get(pos).isDigit() && expression.get(pos)!='.')){
-            if(pre=='+'){
+
+            if(pre.equals("+")){
                 stack.push(cur)
                 pre=expression.get(pos)
             }
-            else if(pre=='-'){
+            else if(pre.equals("-")){
                 stack.push(-cur)
                 pre=expression.get(pos)
             }
-            else if(pre=='*'){
+            else if(pre.equals("*")){
 
                 stack.push(stack.pop()!! * cur)
                 pre=expression.get(pos)
             }
-            else if(pre=='/'){
+            else if(pre.equals("/")){
                 stack.push(stack.pop()!! / cur)
                 pre=expression.get(pos)
             }
+
             cur=0f
             pos++
         }
 
-    }
+
     while(!stack.isEmpty()){
         result = result + stack.pop()!!
     }

@@ -1,36 +1,39 @@
 package com.example.hw2g_3
 
 class test {
-    fun calculation(expression: String): Float{
+    fun calculation(expression: List<String>): Float{
         var stack=Stack<Float>()
-        var pre='+'
+        var pre="+"
         var result=0f
         var decimal=1
         var pos=0
         var cur=0f
         stack.push(0f)
 
-        while (pos<expression.length){
-            val start=pos
-            while (pos<expression.length && (expression.get(pos).isDigit()|| expression.get(pos)=='.')){
-                pos++
-            }
-            cur=expression.substring(start,pos).toFloat()
+        while (pos<expression.size){
 
-            if(pos==expression.length){
-                if(pre=='+'){
+
+
+
+            cur=expression.get(pos).toFloat()
+            pos++
+
+
+            if(pos==expression.size){
+                if(pre.equals("+")){
                     stack.push(cur)
 
                 }
-                else if(pre=='-'){
+                else if(pre.equals("-")){
+
                     stack.push(-cur)
 
                 }
-                else if(pre=='*'){
+                else if(pre.equals("*")){
                     stack.push(stack.pop()!! * cur)
 
                 }
-                else if(pre=='/'){
+                else if(pre.equals("/")){
                     stack.push(stack.pop()!! / cur)
 
                 }
@@ -40,29 +43,30 @@ class test {
 
 
 
-            if((!expression.get(pos).isDigit() && expression.get(pos)!='.')){
-                if(pre=='+'){
-                    stack.push(cur)
-                    pre=expression.get(pos)
-                }
-                else if(pre=='-'){
-                    stack.push(-cur)
-                    pre=expression.get(pos)
-                }
-                else if(pre=='*'){
 
-                    stack.push(stack.pop()!! * cur)
-                    pre=expression.get(pos)
-                }
-                else if(pre=='/'){
-                    stack.push(stack.pop()!! / cur)
-                    pre=expression.get(pos)
-                }
-                cur=0f
-                pos++
+            if(pre.equals("+")){
+                stack.push(cur)
+                pre=expression.get(pos)
+            }
+            else if(pre.equals("-")){
+                stack.push(-cur)
+                pre=expression.get(pos)
+            }
+            else if(pre.equals("*")){
+
+                stack.push(stack.pop()!! * cur)
+                pre=expression.get(pos)
+            }
+            else if(pre.equals("/")){
+                stack.push(stack.pop()!! / cur)
+                pre=expression.get(pos)
             }
 
+            cur=0f
+            pos++
         }
+
+
         while(!stack.isEmpty()){
             result = result + stack.pop()!!
         }
@@ -73,7 +77,9 @@ class test {
 }
 fun main(){
 
-   var expression="3+1.5*2"
-    println(calculation(expression.replace(" ","")))
+   var expression="1--1"
+  println(calculation(listOf("1","-","-1")))
+
+
 
 }
